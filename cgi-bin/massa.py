@@ -1,12 +1,12 @@
-#!/usr/bin/env python 3
+#!/usr/bin/env python3
 
 import cgitb, cgi
 cgitb.enable(display=0, logdir="./")
 
 form = cgi.FieldStorage()
 recieved = form.getvalue('valor')
-unity1 = form.getvalue('unidade1')
-unity2 = form.getvalue('unidade2')
+unit1 = form.getvalue('unidade1')
+unit2 = form.getvalue('unidade2')
 resultFinal = None
 
 def analysingValue(value):
@@ -21,39 +21,54 @@ try:
 except:
     value = 'typeError'
 
-def convertUnits(value, unity1, unity2):
+def convert_from_kg (value, unit1, unit2):
+
+
+def convert_from_g (value, unit1, unit2):
+
+
+def convert_from_mg (value, unit1, unit2):
+
+
+def check_same_unit(value, unit1, unit2):
+    if (unit1 == unit2 and unit1 != 'sel'):
+                if(unit1 == 'kg'):
+                    result = f'Unidades iguais => {value:.2f} Quilogramas'
+
+                elif(unit1 == 'g'):
+                    result = f'Unidade iguais => {value:.2f} Gramas'
+                else:
+                    result = f'Unidade iguais => {value:.2f} Miligramas'
+
+def check_error():
+
+"""
+def convertUnits(value, unit1, unit2):
     if(value!=-1 and value != 'typeError'):
-        if (unity1 == unity2 and unity1 != 'sel'):
-            if(unity1 == 'kg'):
-                result = 'Unidades iguais => {:.2f} Quilogramas'.format(value)
+        
 
-            elif(unity1 == 'g'):
-                result = 'Unidade iguais => {:.2f} Gramas'.format(value)
-            else:
-                result = 'Unidade iguais => {:.2f} Miligramas'.format(value)
-
-        elif (unity1 != 'sel' and unity2 =='sel'):
+        elif (unit1 != 'sel' and unit2 =='sel'):
             result = 'Erro: Selecione uma unidade !'
 
-        elif unity1 == 'kg':
-            if (unity2 == 'gr'):
+        elif unit1 == 'kg':
+            if (unit2 == 'gr'):
                 result = '{} Quilogramas = {:.2f} Gramas'.format(value, (value * 1000))
 
-            elif (unity2 == 'mg'):
+            elif (unit2 == 'mg'):
                 result = '{} Quilogramas = {:.2f} Miligramas'.format(value, (value * 1000000))
 
-        elif unity1 == 'gr':
-            if (unity2 == 'kg'):
+        elif unit1 == 'gr':
+            if (unit2 == 'kg'):
                 result = '{} Gramas = {:.4f} Quilogramas'.format(value, (value / 1000))
 
-            elif (unity2 == 'mg'):
+            elif (unit2 == 'mg'):
                 result = '{} Gramas = {:.2f} Miligramas'.format(value, (value * 1000))
 
-        elif unity1 == 'mg':
-            if (unity2 == 'kg'):
+        elif unit1 == 'mg':
+            if (unit2 == 'kg'):
                 result = '{} Miligramas = {:.6f} Quilogramas'.format(value, (value / 1000000))
 
-            elif (unity2 == 'gr'):
+            elif (unit2 == 'gr'):
                 result = '{} Miligramas = {:.4f} Gramas'.format(value, (value / 1000))
 
         else:
@@ -68,12 +83,14 @@ def convertUnits(value, unity1, unity2):
     return result
 
 try:
-    resultFinal = convertUnits(value, unity1, unity2)
+    resultFinal = convertUnits(value, unit1, unit2)
 
 except:
     resultFinal = 'Erro Inesperado'
+"""
 
-print("Content-type:text/html\r\n\r\n")
+print("Content-Type: text/html")
+print()
 print("<html>")
 print("<head>")
 print('<meta charset="UTF-8">')

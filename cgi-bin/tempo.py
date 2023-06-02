@@ -1,4 +1,4 @@
-#!/usr/bin/env python 3
+#!/usr/bin/env python3
 
 import cgitb, cgi
 cgitb.enable(display=0, logdir="./")
@@ -7,6 +7,7 @@ form = cgi.FieldStorage()
 recieved = form.getvalue('valor')
 unity1 = form.getvalue('unidade1')
 unity2 = form.getvalue('unidade2')
+result_final = None
 
 def analysingValue(value):
     if value:
@@ -68,12 +69,13 @@ def convertUnits(value, unity1, unity2):
     return result
 
 try:
-    resultFinal = convertUnits(value, unity1, unity2)
+    result_final = convertUnits(value, unity1, unity2)
 
 except:
-    resultFinal = 'Erro Inesperado'
+    result_final = 'Erro Inesperado'
 
-print("Content-type:text/html\r\n\r\n")
+print("Content-Type: text/html")
+print()
 print("<html>")
 print("<head>")
 print('<meta charset="UTF-8">')
@@ -85,7 +87,7 @@ print("<body>")
 print("<section>")
 print('<div class ="main">')
 print('<h1>Resultado:</h1>')
-print("<h2>{}</h2>".format(resultFinal))
+print("<h2>{}</h2>".format(result_final))
 print('<a class="back" href="../tempo.html">Voltar</a>')
 print("</div>")
 print("</section>")
