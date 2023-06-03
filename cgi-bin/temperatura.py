@@ -4,10 +4,10 @@ import cgitb, cgi
 cgitb.enable(display=0, logdir="./")
 
 form = cgi.FieldStorage()
-recieved = form.getvalue('valor')
+received = form.getvalue('valor')
 unity1 = form.getvalue('unidade1')
 unity2 = form.getvalue('unidade2')
-result_final = None
+result_final: float
 
 def analysingValue(value):
     if value:
@@ -15,57 +15,178 @@ def analysingValue(value):
     else:
         return -1
 
-try:
-    value = analysingValue(recieved)
+"""checks for an empty value.
 
+Makes sure that an empty value will not be used on the functions.
+
+Args:
+    value: The value that the user wants to convert.
+
+Returns:
+    If the value is not empty, it returns the same value converted to int, but if there is
+    not any value, it returns -1.
+"""
+
+try:
+    value = analysingValue(received)
 except:
     value = 'typeError'
 
-def convertUnits(value, unity1, unity2):
-    if(value!=-1 and value != 'typeError'):
-        if (unity1 == unity2 and unity1 != 'sel'):
-            if(unity1 == 'cel'):
-                result = 'Unidades iguais => {:.2f} Graus Celsius'.format(value)
+def convert_from_celsius (value, unit2):
+    if (unit2 == 'kel'):
+        return f'{value} Celsius = {(value + 273.15):.2f} Kelvin'
+    elif (unit2 == 'fah'):
+        return f'{value} Celsius = {((1.8 * value) + 32):.2f} Graus Fahrenheit'
 
-            elif(unity1 == 'kel'):
-                result = 'Unidade iguais => {:.2f} Kelvin'.format(value)
-            else:
-                result = 'Unidade iguais => {:.2f} Graus Fahrenheit'.format(value)
+"""Converts from degree celsius to kelvin or degree fahrenheit.
 
-        elif (unity1 != 'sel' and unity2 =='sel'):
-            result = 'Erro: Selecione uma unidade !'
+Checks the unit to convert to and does the mathematical operations to perform 
+the conversion from degree celsius to kelvin or degree fahrenheit depending on the users input.
 
-        elif unity1 == 'cel':
-            if (unity2 == 'kel'):
-                result = '{} Graus Celsius = {:.2f} Kelvin'.format(value, (value + 273.15))
+Args:
+    value: The value that the user wants to convert.
+    unit2: The unit that the user wants to convert to.
 
-            elif (unity2 == 'fah'):
-                result = '{} Graus Celsius = {:.2f} Graus Fahrenheit'.format(value, ((1.8 * value) + 32))
+Returns:
+    A formated string containing the sentence that presents the converted
+    value to the user.
+"""
 
-        elif unity1 == 'fah':
-            if (unity2 == 'cel'):
-                result = '{} Graus Fahrenheit = {:.2f} Kelvin'.format(value, ((value - 32) / 1.8))
+def convert_from_kelvin (value, unit2):
+    if (unit2 == 'cel'):
+        return f'{value} Kelvin = {(value - 273.15):.2f} Graus Celsius'
+    elif (unit2 == 'fah'):
+        return f'{value} Kelvin = {(((value - 273.15) * 1.8) + 32):.2f} Graus Fahrenheit'
 
-            elif (unity2 == 'kel'):
-                result = '{} Graus Fahrenheit = {:.2f} Kelvin'.format(value, (((value - 32) * 5) / 273.15))
+"""Converts from kelvin to degree celsius or degree fahrenheit.
 
-        elif unity1 == 'kel':
-            if (unity2 == 'cel'):
-                result = '{} Kelvin = {:.2f} Graus Celsius'.format(value, (value - 273.15))
+Checks the unit to convert to and does the mathematical operations to perform 
+the conversion from kelvin to degree celsius or degree fahrenheit depending on the users input.
 
-            elif (unity2 == 'fah'):
-                result = '{} Kelvin = {:.2f} Graus Fahrenheit'.format(value, ((value - 273.15) * 1.8) + 32)
+Args:
+    value: The value that the user wants to convert.
+    unit2: The unit that the user wants to convert to.
 
-        else:
-            result = 'Erro: Selecione uma unidade !'
+Returns:
+    A formated string containing the sentence that presents the converted
+    value to the user.
+"""
 
-    elif (value == 'typeError'):
-        result = 'Erro: Tipo de Valor inesperado !'
+def convert_from_fahrenheit (value, unit2):
+    if (unit2 == 'cel'):
+        return f'{value} Graus Fahrenheit = {((value - 32) / 1.8):.2f} Graus Celsius'
+    elif (unit2 == 'kel'):
+        return f'{value} Graus Fahrenheit = {(((value - 32) / 1.8) + 273.15):.2f} Kelvin'
 
+"""Converts from degree fahrenheit to degree celsius or kelvin.
+
+Checks the unit to convert to and does the mathematical operations to perform 
+the conversion from degree fahrenheit to degree celsius or kelvin depending on the users input.
+
+Args:
+    value: The value that the user wants to convert.
+    unit2: The unit that the user wants to convert to.
+
+Returns:
+    A formated string containing the sentence that presents the converted
+    value to the user.
+"""
+
+def same_unit_message(value, unit1, unit2):
+    if(unit1 == unit2 and unit1 == 'cel'):
+        return f'Unidades iguais => {value:.2f} Graus Celsius'
+    elif(unit1 == unit2 and unit1 == 'kel'):
+        return f'Unidade iguais => {value:.2f} Kelvin'
+    elif(unit1 == unit2 and unit1 == 'fah'):
+        return f'Unidade iguais => {value:.2f} Graus Fahrenheit'
+
+"""Checks if the user put the same unit to convert to.
+
+It checks if the user chose the same unit for the conversion
+and shows the message explaining the trivial conversion.
+
+Args:
+    value: The value that the user wants to convert.
+    unit1: The unit that the user wants to convert from.
+    unit2: The unit that the user wants to convert to.
+
+Returns:
+    A message showing the not quite so conversion performed.
+"""
+
+def error_message(value, unit1, unit2):
+    if (value == 'typeError'):
+        return 'Erro: Tipo de Valor inesperado !'
+    elif (value == -1):
+        return 'Erro: Campos sem valores !'
+    elif (unit1 == 'sel' or unit2 =='sel'):
+        return 'Erro: Selecione uma unidade !'
+
+"""Checks the type of error.
+
+Checks the value of the parameters and shows the possible types of 
+errors envolved with them.
+
+Args:
+    value: The value that the user wants to convert.
+    unit1: The unit that the user wants to convert from.
+    unit2: The unit that the user wants to convert to.
+
+Returns:
+    A message expliciting what type of error has occurred.
+"""
+
+def check_for_errors (value, unit1, unit2):
+    if (value == 'typeError'):
+        return True
+    elif (value == -1):
+        return True
+    elif (unit1 == 'sel' or unit2 =='sel'):
+        return True
+    else: 
+        return False
+
+"""Checks for errors in the variables used.
+
+It searches for values in the variables that can cause conflicts
+in arithmetic operations.
+
+Args:
+    value: The value that the user wants to convert.
+    unit1: The unit that the user wants to convert from.
+    unit2: The unit that the user wants to convert to.
+
+Returns:
+    A boolean indicating that a variable contains a value that
+    can cause problems.
+"""
+
+def convertUnits(value, unit1, unit2):
+    if check_for_errors(value, unit1, unit2):
+        return error_message(value, unit1, unit2)
+    elif(unit1 == unit2):
+        return same_unit_message(value, unit1, unit2)
+    elif (unit1 == 'cel'):
+        return convert_from_celsius(value, unit2)
+    elif (unit1 == 'kel'):
+        return convert_from_kelvin(value, unit2)
     else:
-        result = 'Erro: Campos sem valores !'
+        return convert_from_fahrenheit(value, unit2)
 
-    return result
+"""Checks the variables and uses it in a previously created function.
+
+It takes the parameters and through a series of if's performing a flow control
+takes one of the created functions created previously to process the information.
+
+Args:
+    value: The value that the user wants to convert.
+    unit1: The unit that the user wants to convert from.
+    unit2: The unit that the user wants to convert to.
+
+Returns:
+    A string containing a message showing the converted value or
+    the type of error if it happens.
+"""
 
 try:
     result_final = convertUnits(value, unity1, unity2)

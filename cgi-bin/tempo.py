@@ -15,62 +15,181 @@ def analysingValue(value):
     else:
         return -1
 
+"""checks for an empty value.
+
+Makes sure that an empty value will not be used on the functions.
+
+Args:
+    value: The value that the user wants to convert.
+
+Returns:
+    If the value is not empty, it returns the same value converted to int, but if there is
+    not any value, it returns -1.
+"""
+
 try:
     value = analysingValue(recieved)
-
 except:
     value = 'typeError'
 
-def convertUnits(value, unity1, unity2):
-    if (value != -1 and value != 'typeError'):
-        if (unity1 == unity2 and unity1 != 'sel'):
-            if (unity1 == 'seg'):
-                result = 'Unidades iguais => {:.2f} Segundos'.format(value)
+def convert_from_seconds (value, unit2):
+    if (unit2 == 'min'):
+        return f'{value} Segundos = {(value / 60):.2f} Minutos'
+    elif (unit2 == 'hr'):
+        return f'{value} Segundos = {(value / 3600):.4f} Horas'
 
-            elif (unity1 == 'min'):
-                result = 'Unidade iguais => {:.2f} Minutos'.format(value)
+"""Converts from seconds to minutes or hours.
 
-            else:
-                result = 'Unidade iguais => {:.2f} Horas'.format(value)
+Checks the unit to convert to and does the mathematical operations to perform 
+the conversion from seconds to minutes or hours depending on the users input.
 
-        elif (unity1 != 'sel' and unity2 =='sel'):
-            result = 'Erro: Selecione uma unidade !'
+Args:
+    value: The value that the user wants to convert.
+    unit2: The unit that the user wants to convert to.
 
-        elif unity1 == 'seg':
-            if (unity2 == 'min'):
-                result = '{} Segundos = {:.2f} Minutos'.format(value, (value / 60))
+Returns:
+    A formated string containing the sentence that presents the converted
+    value to the user.
+"""
 
-            elif (unity2 == 'hr'):
-                result = '{} Segundos = {:.4f} Horas'.format(value, (value / 3600))
+def convert_from_minutes (value, unit2):
+    if (unit2 == 'seg'):
+        return f'{value} Minutos = {(value * 60):.2f} Segundos'
+    elif (unit2 == 'hr'):
+        return f'{value} Minutos = {(value / 60):.2f} Horas'
 
-        elif unity1 == 'min':
-            if (unity2 == 'seg'):
-                result = '{} Minutos = {:.2f} Segundos'.format(value, (value * 60))
+"""Converts from minutes to seconds or hours.
 
-            elif (unity2 == 'hr'):
-                result = '{} Minutos = {:.2f} Horas'.format(value, (value / 60))
+Checks the unit to convert to and does the mathematical operations to perform 
+the conversion from minutes to seconds or hours depending on the users input.
 
-        elif unity1 == 'hr':
-            if (unity2 == 'seg'):
-                result = '{} Horas = {:.2f} Segundos'.format(value, (value * 3600))
+Args:
+    value: The value that the user wants to convert.
+    unit2: The unit that the user wants to convert to.
 
-            elif (unity2 == 'min'):
-                result = '{} Horas = {:.2f} Minutos'.format(value, (value * 60))
+Returns:
+    A formated string containing the sentence that presents the converted
+    value to the user.
+"""
 
-        else:
-            result = 'Erro: Selecione uma unidade !'
+def convert_from_hours (value, unit2):
+    if (unit2 == 'seg'):
+        return f'{value} Horas = {(value * 3600):.2f} Segundos'
+    elif (unit2 == 'min'):
+        return f'{value} Horas = {(value * 60):.2f} Minutos'
 
-    elif(value == 'typeError'):
-        result = 'Erro: Tipo de Valor inesperado !'
+"""Converts from hours to seconds or minutes.
 
+Checks the unit to convert to and does the mathematical operations to perform 
+the conversion from hours to seconds or minutes depending on the users input.
+
+Args:
+    value: The value that the user wants to convert.
+    unit2: The unit that the user wants to convert to.
+
+Returns:
+    A formated string containing the sentence that presents the converted
+    value to the user.
+"""
+
+def same_unit_message(value, unit1, unit2):
+    if(unit1 == unit2 and unit1 == 'seg'):
+        return f'Unidades iguais => {value:.2f} Segundos'
+    elif(unit1 == unit2 and unit1 == 'min'):
+        return f'Unidade iguais => {value:.2f} Minutos'
+    elif(unit1 == unit2 and unit1 == 'hr'):
+        return f'Unidade iguais => {value:.2f} Horas'
+
+"""Checks if the user put the same unit to convert to.
+
+It checks if the user chose the same unit for the conversion
+and shows the message explaining the trivial conversion.
+
+Args:
+    value: The value that the user wants to convert.
+    unit1: The unit that the user wants to convert from.
+    unit2: The unit that the user wants to convert to.
+
+Returns:
+    A message showing the not quite so conversion performed.
+"""
+
+def error_message(value, unit1, unit2):
+    if (value == 'typeError'):
+        return 'Erro: Tipo de Valor inesperado !'
+    elif (value == -1):
+        return 'Erro: Campos sem valores !'
+    elif (unit1 == 'sel' or unit2 =='sel'):
+        return 'Erro: Selecione uma unidade !'
+
+"""Checks the type of error.
+
+Checks the value of the parameters and shows the possible types of 
+errors envolved with them.
+
+Args:
+    value: The value that the user wants to convert.
+    unit1: The unit that the user wants to convert from.
+    unit2: The unit that the user wants to convert to.
+
+Returns:
+    A message expliciting what type of error has occurred.
+"""
+
+def check_for_errors (value, unit1, unit2):
+    if (value == 'typeError'):
+        return True
+    elif (value == -1):
+        return True
+    elif (unit1 == 'sel' or unit2 =='sel'):
+        return True
+    else: 
+        return False
+
+"""Checks for errors in the variables used.
+
+It searches for values in the variables that can cause conflicts
+in arithmetic operations.
+
+Args:
+    value: The value that the user wants to convert.
+    unit1: The unit that the user wants to convert from.
+    unit2: The unit that the user wants to convert to.
+
+Returns:
+    A boolean indicating that a variable contains a value that
+    can cause problems.
+"""
+
+def convertUnits(value, unit1, unit2):
+    if check_for_errors(value, unit1, unit2):
+        return error_message(value, unit1, unit2)
+    elif(unit1 == unit2):
+        return same_unit_message(value, unit1, unit2)
+    elif (unit1 == 'seg'):
+        return convert_from_seconds(value, unit2)
+    elif (unit1 == 'min'):
+        return convert_from_minutes(value, unit2)
     else:
-        result = 'Erro: Campos sem Valores !'
+        return convert_from_hours(value, unit2)
 
-    return result
+"""Checks the variables and uses it in a previously created function.
+
+It takes the parameters and through a series of if's performing a flow control
+takes one of the created functions created previously to process the information.
+
+Args:
+    value: The value that the user wants to convert.
+    unit1: The unit that the user wants to convert from.
+    unit2: The unit that the user wants to convert to.
+
+Returns:
+    A string containing a message showing the converted value or
+    the type of error if it happens.
+"""
 
 try:
     result_final = convertUnits(value, unity1, unity2)
-
 except:
     result_final = 'Erro Inesperado'
 
